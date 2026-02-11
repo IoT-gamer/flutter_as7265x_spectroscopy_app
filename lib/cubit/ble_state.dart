@@ -1,6 +1,14 @@
 part of 'ble_cubit.dart';
 
-enum BleStatus { initial, scanning, connecting, connected, disconnected, error }
+enum BleStatus {
+  initial,
+  scanning,
+  connecting,
+  syncing,
+  connected,
+  disconnected,
+  error,
+}
 
 class BleState extends Equatable {
   final BleStatus status;
@@ -25,7 +33,7 @@ class BleState extends Equatable {
     this.whiteLedOn = false,
     this.irLedOn = false,
     this.uvLedOn = false,
-    this.gainIndex = 0,
+    this.gainIndex = 3, // Default 64x
     this.integrationValue = 50, // Default ~140ms
   });
 

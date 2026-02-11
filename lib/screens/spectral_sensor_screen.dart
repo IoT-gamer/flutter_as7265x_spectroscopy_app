@@ -50,6 +50,25 @@ class SpectralSensorScreen extends StatelessWidget {
             case BleStatus.connecting:
               return const Center(child: CircularProgressIndicator());
 
+            case BleStatus.syncing:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(color: Colors.orange),
+                    const SizedBox(height: 20),
+                    Text(
+                      state.statusMessage,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      "Configuring hardware registers...",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+
             case BleStatus.connected:
               return _buildDashboard(context);
 

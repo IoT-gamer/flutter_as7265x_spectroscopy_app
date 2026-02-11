@@ -79,11 +79,45 @@ class BleCubit extends Cubit<BleState> {
       await _discoverServices(device);
 
       emit(
-        state.copyWith(status: BleStatus.connected, statusMessage: "Connected"),
+        state.copyWith(
+          status: BleStatus.syncing,
+          statusMessage: "Syncing Sensor...",
+        ),
+      );
+
+      // Sync the hardware to the App's initial state
+      await initializeSensorSettings();
+
+      emit(
+        state.copyWith(
+          status: BleStatus.connected,
+          statusMessage: "Connected & Ready",
+        ),
       );
     } catch (e) {
       emit(state.copyWith(status: BleStatus.error, errorMessage: e.toString()));
     }
+  }
+
+  Future<void> initializeSensorSettings() async {
+    // Sync Gain (Default 3 / 64x)
+    await sendCommand(0x03, state.gainIndex);
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    // Sync Integration Time (Default 50 / ~140ms)
+    await sendCommand(0x02, state.integrationValue);
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    // Ensure LEDs are Off (Matching initial app state)
+    await sendCommand(0x03, state.whiteLedOn ? 1 : 0);
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    await sendCommand(0x04, state.irLedOn ? 1 : 0);
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    await sendCommand(0x05, state.uvLedOn ? 1 : 0);
+
+    print("Sensor initialization sequence complete.");
   }
 
   Future<void> _discoverServices(BluetoothDevice device) async {
