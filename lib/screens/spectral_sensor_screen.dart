@@ -127,6 +127,14 @@ class SpectralSensorScreen extends StatelessWidget {
           ),
           const SensorControls(), // LED and Gain controls widget
           const SizedBox(height: 20),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            label: const Text("Export JSON"),
+            onPressed: () => context.read<BleCubit>().saveSpectra(),
+          ),
+
+          const SizedBox(height: 10),
+
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red.shade100,

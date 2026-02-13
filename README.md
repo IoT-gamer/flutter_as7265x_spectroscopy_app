@@ -52,6 +52,7 @@ The mobile app is built using **Flutter** and **Cubit (BLoC)** for state managem
 * **Live Bar Chart:** Visualizes all 18 channels simultaneously using `fl_chart`.
 * **Device Discovery:** Scans specifically for "Pico-Spectral" devices or the custom service UUID.
 * **Dynamic Controls:** Real-time adjustment of sensor gain, integration time (via slider), and LED toggles.
+* **Data Export:** Save captured spectra and sensor metadata to **JSON** using using `file_picker`.
 * **Robust BLE:** Uses `flutter_blue_plus` for reliable communication and notification handling.
 
 ## 🚀 Getting Started

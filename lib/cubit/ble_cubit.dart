@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../widgets/spectral_bar_chart.dart';
 
 part 'ble_state.dart';
 
@@ -230,6 +235,33 @@ class BleCubit extends Cubit<BleState> {
 
     // Command 0x02 is for Integration Time
     sendCommand(0x02, clampedValue);
+  }
+
+  Future<void> saveSpectra() async {
+    try {
+      // Convert state to JSON string
+      // This uses the toJson() helper we added to BleState
+      String jsonString = jsonEncode(state.toJson());
+
+      // Convert the String to UTF-8 Bytes
+      // On mobile, the picker needs the data buffer immediately
+      Uint8List bytes = utf8.encode(jsonString);
+
+      // Open File Picker with the 'bytes' parameter
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save Spectral Data',
+        fileName: 'spectral_data_${DateTime.now().millisecondsSinceEpoch}.json',
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+        bytes: bytes,
+      );
+
+      if (outputFile != null) {
+        emit(state.copyWith(statusMessage: "File saved to $outputFile"));
+      }
+    } catch (e) {
+      emit(state.copyWith(errorMessage: "Failed to save file: $e"));
+    }
   }
 
   Future<void> disconnect() async {

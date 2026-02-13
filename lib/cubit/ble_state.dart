@@ -79,4 +79,19 @@ class BleState extends Equatable {
     gainIndex,
     integrationValue,
   ];
+
+  // Convert state to JSON for exporting
+  Map<String, dynamic> toJson() {
+    return {
+      'timestamp': DateTime.now().toIso8601String(),
+      'status': status.toString(),
+      'spectral_data': spectralData,
+      'settings': {
+        'gain_index': gainIndex,
+        'integration_value': integrationValue,
+        'led_status': {'white': whiteLedOn, 'ir': irLedOn, 'uv': uvLedOn},
+      },
+      'wavelength_labels': sortedLabels,
+    };
+  }
 }
