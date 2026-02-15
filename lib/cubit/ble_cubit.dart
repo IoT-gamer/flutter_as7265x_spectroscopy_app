@@ -15,6 +15,7 @@ part 'ble_state.dart';
 // --- Pico Spectral Sensor BLE Definitions ---
 final Guid spectralServiceUuid = Guid("0000FF00-0000-1000-8000-00805F9B34FB");
 final Guid charControlUuid = Guid("0000FF04-0000-1000-8000-00805F9B34FB");
+final Guid charTempUuid = Guid("0000FF05-0000-1000-8000-00805F9B34FB");
 
 class BleCubit extends Cubit<BleState> {
   StreamSubscription<List<ScanResult>>? _scanSubscription;
@@ -22,6 +23,7 @@ class BleCubit extends Cubit<BleState> {
 
   // Cache the control characteristic to avoid redundant discovery
   BluetoothCharacteristic? _cachedControlChar;
+  BluetoothCharacteristic? _cachedTempChar;
 
   BleCubit() : super(const BleState()) {
     requestPermissions();
@@ -133,6 +135,8 @@ class BleCubit extends Cubit<BleState> {
           // Cache control characteristic
           if (char.uuid == charControlUuid) {
             _cachedControlChar = char;
+          } else if (char.uuid == charTempUuid) {
+            _cachedTempChar = char;
           }
 
           // Setup notifications for NIR, VIS, UV
@@ -237,8 +241,39 @@ class BleCubit extends Cubit<BleState> {
     sendCommand(0x02, clampedValue);
   }
 
+  // Helper to read temperatures from the sensor and update state
+  Future<void> updateTemperatures() async {
+    if (_cachedTempChar == null) {
+      print("Temp char not found");
+      return;
+    }
+
+    try {
+      // Read 3 bytes: [Master, Slave1, Slave2]
+      List<int> values = await _cachedTempChar!.read();
+
+      if (values.length >= 3) {
+        // Use ByteData to correctly interpret signed 8-bit integers (int8)
+        final byteData = ByteData.sublistView(Uint8List.fromList(values));
+
+        final tNIR = byteData.getInt8(0);
+        final tVIS = byteData.getInt8(1);
+        final tUV = byteData.getInt8(2);
+
+        emit(state.copyWith(tempNIR: tNIR, tempVIS: tVIS, tempUV: tUV));
+        print("Temps Updated: $tNIR, $tVIS, $tUV");
+      }
+    } catch (e) {
+      print("Error reading temperature: $e");
+    }
+  }
+
   Future<void> saveSpectra() async {
     try {
+      // Fetch temps immediately before saving
+      // Force a read of the temperatures so metadata is fresh
+      await updateTemperatures();
+
       // Convert state to JSON string
       // This uses the toJson() helper we added to BleState
       String jsonString = jsonEncode(state.toJson());

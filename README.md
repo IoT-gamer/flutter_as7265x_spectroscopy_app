@@ -43,6 +43,10 @@ UUID: `0xFF04` accepts a 2-byte packet: `[Command ID] [Value]`.
 * `0x04:` Toggle IR LED (1=On, 0=Off).
 * `0x05:` Toggle UV LED (1=On, 0=Off).
 
+### Temperature Characteristic (READ)
+UUID: `0xFF05`
+Returns a 3-byte array of signed 8-bit integers (`int8_t`) representing the internal chip temperatures in Celsius for the NIR, VIS, and UV sensors, respectively.
+
 ## 📱 Flutter Application
 
 The mobile app is built using **Flutter** and **Cubit (BLoC)** for state management.
@@ -52,7 +56,7 @@ The mobile app is built using **Flutter** and **Cubit (BLoC)** for state managem
 * **Live Bar Chart:** Visualizes all 18 channels simultaneously using `fl_chart`.
 * **Device Discovery:** Scans specifically for "Pico-Spectral" devices or the custom service UUID.
 * **Dynamic Controls:** Real-time adjustment of sensor gain, integration time (via slider), and LED toggles.
-* **Data Export:** Save captured spectra and sensor metadata to **JSON** using using `file_picker`.
+* **Data Export:** Save captured spectra, sensor settings, and sensor temperatures to **JSON** using `file_picker`.
 * **Robust BLE:** Uses `flutter_blue_plus` for reliable communication and notification handling.
 
 ## 🚀 Getting Started
