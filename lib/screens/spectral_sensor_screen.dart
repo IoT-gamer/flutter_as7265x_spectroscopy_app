@@ -70,7 +70,7 @@ class SpectralSensorScreen extends StatelessWidget {
               );
 
             case BleStatus.connected:
-              return _buildDashboard(context);
+              return _buildDashboard(context, state);
 
             case BleStatus.disconnected:
               return const Center(
@@ -108,7 +108,7 @@ class SpectralSensorScreen extends StatelessWidget {
   }
 
   // The main data view
-  Widget _buildDashboard(BuildContext context) {
+  Widget _buildDashboard(BuildContext context, BleState state) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -126,6 +126,33 @@ class SpectralSensorScreen extends StatelessWidget {
             child: Text("Sensor Controls"),
           ),
           const SensorControls(), // LED and Gain controls widget
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton.icon(
+                icon: Icon(
+                  state.darkCalibration != null
+                      ? Icons.check_circle
+                      : Icons.brightness_3,
+                  color: state.darkCalibration != null ? Colors.green : null,
+                ),
+                label: const Text("Set Dark"),
+                onPressed: () => context.read<BleCubit>().saveDarkCalibration(),
+              ),
+              ElevatedButton.icon(
+                icon: Icon(
+                  state.whiteCalibration != null
+                      ? Icons.check_circle
+                      : Icons.brightness_high,
+                  color: state.whiteCalibration != null ? Colors.green : null,
+                ),
+                label: const Text("Set White"),
+                onPressed: () =>
+                    context.read<BleCubit>().saveWhiteCalibration(),
+              ),
+            ],
+          ),
           const SizedBox(height: 20),
           ElevatedButton.icon(
             icon: const Icon(Icons.save),

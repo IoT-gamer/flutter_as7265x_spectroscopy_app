@@ -54,6 +54,7 @@ The mobile app is built using **Flutter** and **Cubit (BLoC)** for state managem
 ### Key Features
 
 * **Live Bar Chart:** Visualizes all 18 channels simultaneously using `fl_chart`.
+* **Calibration Support:** Capture and save dark and white reference spectra to enable true reflectance calculations. Calibration snapshots automatically record the spectra alongside exact timestamps, sensor settings, and hardware temperatures.
 * **Device Discovery:** Scans specifically for "Pico-Spectral" devices or the custom service UUID.
 * **Dynamic Controls:** Real-time adjustment of sensor gain, integration time (via slider), and LED toggles.
 * **Data Export:** Save captured spectra, sensor settings, and sensor temperatures to **JSON** using `file_picker`.

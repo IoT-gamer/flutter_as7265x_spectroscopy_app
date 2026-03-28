@@ -299,6 +299,52 @@ class BleCubit extends Cubit<BleState> {
     }
   }
 
+  // Helper method to generate a snapshot from the current state
+  CalibrationSnapshot _createSnapshot() {
+    return CalibrationSnapshot(
+      timestamp: DateTime.now().toIso8601String(),
+      spectralData: List.from(state.spectralData),
+      gainIndex: state.gainIndex,
+      integrationValue: state.integrationValue,
+      ledStatus: {
+        'white': state.whiteLedOn,
+        'ir': state.irLedOn,
+        'uv': state.uvLedOn,
+      },
+      temperatures: {
+        'nir_master': state.tempNIR,
+        'vis_slave1': state.tempVIS,
+        'uv_slave2': state.tempUV,
+      },
+    );
+  }
+
+  Future<void> saveDarkCalibration() async {
+    await updateTemperatures(); // Ensure fresh metadata
+    final snapshot = _createSnapshot();
+    emit(
+      state.copyWith(
+        darkCalibration: snapshot,
+        statusMessage: "Dark calibration saved",
+      ),
+    );
+  }
+
+  Future<void> saveWhiteCalibration() async {
+    await updateTemperatures(); // Ensure fresh metadata
+    final snapshot = _createSnapshot();
+    emit(
+      state.copyWith(
+        whiteCalibration: snapshot,
+        statusMessage: "White calibration saved",
+      ),
+    );
+  }
+
+  void clearCalibrations() {
+    // NOT IMPLEMENTED
+  }
+
   Future<void> disconnect() async {
     if (_connectedDevice == null) return;
     try {
