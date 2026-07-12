@@ -123,6 +123,9 @@ class BleCubit extends Cubit<BleState> {
     await Future.delayed(const Duration(milliseconds: 50));
 
     await sendCommand(0x05, state.uvLedOn ? 1 : 0);
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    await sendCommand(0x06, state.statusLedOn ? 1 : 0);
 
     print("Sensor initialization sequence complete.");
   }

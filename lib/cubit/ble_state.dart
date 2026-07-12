@@ -20,6 +20,7 @@ class BleState extends Equatable {
   final bool whiteLedOn;
   final bool irLedOn;
   final bool uvLedOn;
+  final bool statusLedOn; //blue status LED
   final int gainIndex; // 0=1x, 1=3.7x, 2=16x, 3=64x
   final int integrationValue; // Range 1-255
   final int tempNIR;
@@ -38,6 +39,7 @@ class BleState extends Equatable {
     this.whiteLedOn = false,
     this.irLedOn = false,
     this.uvLedOn = false,
+    this.statusLedOn = false,
     this.gainIndex = 3, // Default 64x
     this.integrationValue = 50, // Default ~140ms
     this.tempNIR = 0,
@@ -57,6 +59,7 @@ class BleState extends Equatable {
     bool? whiteLedOn,
     bool? irLedOn,
     bool? uvLedOn,
+    bool? statusLedOn,
     int? gainIndex,
     int? integrationValue,
     int? tempNIR,
@@ -75,6 +78,7 @@ class BleState extends Equatable {
       whiteLedOn: whiteLedOn ?? this.whiteLedOn,
       irLedOn: irLedOn ?? this.irLedOn,
       uvLedOn: uvLedOn ?? this.uvLedOn,
+      statusLedOn: statusLedOn ?? this.statusLedOn,
       gainIndex: gainIndex ?? this.gainIndex,
       integrationValue: integrationValue ?? this.integrationValue,
       tempNIR: tempNIR ?? this.tempNIR,
@@ -96,6 +100,7 @@ class BleState extends Equatable {
     whiteLedOn,
     irLedOn,
     uvLedOn,
+    statusLedOn,
     gainIndex,
     integrationValue,
     tempNIR,

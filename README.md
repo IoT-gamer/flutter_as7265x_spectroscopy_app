@@ -42,6 +42,7 @@ UUID: `0xFF04` accepts a 2-byte packet: `[Command ID] [Value]`.
 * `0x03:` Toggle White LED (1=On, 0=Off).
 * `0x04:` Toggle IR LED (1=On, 0=Off).
 * `0x05:` Toggle UV LED (1=On, 0=Off).
+* `0x06:` Toggle Status LED (1=On, 0=Off).
 
 ### Temperature Characteristic (READ)
 UUID: `0xFF05`
